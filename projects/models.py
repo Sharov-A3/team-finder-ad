@@ -1,6 +1,10 @@
 from django.conf import settings
 from django.db import models
 
+NAME_MAX_LENGTH = 200
+STATUS_MAX_LENGTH = 6
+
+
 class Project(models.Model):
     STATUS_OPEN = "open"
     STATUS_CLOSED = "closed"
@@ -9,7 +13,7 @@ class Project(models.Model):
         (STATUS_CLOSED, "Закрыт"),
     ]
 
-    name = models.CharField(max_length=200)
+    name = models.CharField(max_length=NAME_MAX_LENGTH)
     description = models.TextField(blank=True, default="")
     owner = models.ForeignKey(
         settings.AUTH_USER_MODEL,
@@ -18,7 +22,9 @@ class Project(models.Model):
     )
     created_at = models.DateTimeField(auto_now_add=True)
     github_url = models.URLField(blank=True, default="")
-    status = models.CharField(max_length=6, choices=STATUS_CHOICES, default=STATUS_OPEN)
+    status = models.CharField(
+        max_length=STATUS_MAX_LENGTH, choices=STATUS_CHOICES, default=STATUS_OPEN
+    )
     participants = models.ManyToManyField(
         settings.AUTH_USER_MODEL,
         blank=True,
